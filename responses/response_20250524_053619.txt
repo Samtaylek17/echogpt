@@ -1,0 +1,1073 @@
+Model: o3
+Timestamp: 20250524_053619
+
+Prompt:
+--------------------------------------------------
+Generate 500 more items from this array of 50 items, the SQL should remain the same but rephrase the questions in different ways. Make sure to maintain the same structure as the example provided.
+[
+    {
+      "db_id": "nyc_data",
+      "id": 1,
+      "question": "What are the names of all the neighborhoods in New York City?",
+      "difficulty": "Easy",
+      "evidence": "names of all neighborhoods refers to name column in nyc_neighborhoods table",
+      "SQL": "SELECT name FROM nyc_neighborhoods;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 2,
+      "question": "What are the names of all the neighborhoods in Brooklyn?",
+      "difficulty": "Easy",
+      "evidence": "neighborhoods in Brooklyn refers to nyc_neighborhoods where boroname = 'Brooklyn'",
+      "SQL": "SELECT name FROM nyc_neighborhoods WHERE boroname = 'Brooklyn';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 3,
+      "question": "What is the number of letters in the names of all the neighborhoods in Brooklyn?",
+      "difficulty": "Easy",
+      "evidence": "number of letters refers to char_length(name); neighborhoods in Brooklyn refers to nyc_neighborhoods where boroname = 'Brooklyn'",
+      "SQL": "SELECT char_length(name) FROM nyc_neighborhoods WHERE boroname = 'Brooklyn';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 4,
+      "question": "What is the average number of letters and standard deviation of number of letters in the names of all the neighborhoods in Brooklyn?",
+      "difficulty": "Intermediate",
+      "evidence": "average number of letters refers to avg(char_length(name)); standard deviation refers to stddev(char_length(name)); neighborhoods in Brooklyn refers to nyc_neighborhoods where boroname = 'Brooklyn'",
+      "SQL": "SELECT avg(char_length(name)), stddev(char_length(name)) FROM nyc_neighborhoods WHERE boroname = 'Brooklyn';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 5,
+      "question": "What is the average number of letters in the names of all the neighborhoods in New York City, reported by borough?",
+      "difficulty": "Intermediate",
+      "evidence": "average number of letters refers to avg(char_length(name)); reported by borough refers to GROUP BY boroname",
+      "SQL": "SELECT boroname, avg(char_length(name)) FROM nyc_neighborhoods GROUP BY boroname;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 6,
+      "question": "How many records are in the nyc_streets table?",
+      "difficulty": "Easy",
+      "evidence": "how many records refers to Count(*)",
+      "SQL": "SELECT Count(*) FROM nyc_streets;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 7,
+      "question": "How many streets in NYC start with 'B'?",
+      "difficulty": "Easy",
+      "evidence": "streets that start with 'B' refers to name LIKE 'B%'",
+      "SQL": "SELECT Count(*) FROM nyc_streets WHERE name LIKE 'B%';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 8,
+      "question": "What is the population of NYC?",
+      "difficulty": "Easy",
+      "evidence": "population of NYC refers to Sum(popn_total) from nyc_census_blocks",
+      "SQL": "SELECT Sum(popn_total) FROM nyc_census_blocks;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 9,
+      "question": "What is the population of 'The Bronx'?",
+      "difficulty": "Easy",
+      "evidence": "population of 'The Bronx' refers to Sum(popn_total) from nyc_census_blocks where boroname = 'The Bronx'",
+      "SQL": "SELECT Sum(popn_total) FROM nyc_census_blocks WHERE boroname = 'The Bronx';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 10,
+      "question": "How many 'neighborhoods' are in each borough?",
+      "difficulty": "Easy",
+      "evidence": "number of neighborhoods in each borough refers to count(*) from nyc_neighborhoods GROUP BY boroname",
+      "SQL": "SELECT boroname, count(*) FROM nyc_neighborhoods GROUP BY boroname;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 11,
+      "question": "For each borough in NYC, what is percentage of the population is white?",
+      "difficulty": "Intermediate",
+      "evidence": "percentage of white population refers to 100.0 * Sum(popn_white)/Sum(popn_total)",
+      "SQL": "SELECT boroname, 100.0 * Sum(popn_white)/Sum(popn_total) AS pct FROM nyc_census_blocks GROUP BY boroname;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 12,
+      "question": "What is the area of the 'West Village' neighborhood?",
+      "difficulty": "Intermediate",
+      "evidence": "area refers to ST_Area(geom); 'West Village' refers to name = 'West Village'",
+      "SQL": "SELECT ST_Area(geom) FROM nyc_neighborhoods WHERE name = 'West Village';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 13,
+      "question": "What is the geometry type of 'Pelham St'? The length?",
+      "difficulty": "Intermediate",
+      "evidence": "geometry type refers to ST_GeometryType(geom); length refers to ST_Length(geom); 'Pelham St' refers to name = 'Pelham St'",
+      "SQL": "SELECT ST_GeometryType(geom), ST_Length(geom) FROM nyc_streets WHERE name = 'Pelham St';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 14,
+      "question": "What is the GeoJSON representation of the 'Broad St' subway station?",
+      "difficulty": "Intermediate",
+      "evidence": "GeoJSON representation refers to ST_AsGeoJSON(geom); 'Broad St' subway station refers to name = 'Broad St'",
+      "SQL": "SELECT ST_AsGeoJSON(geom) FROM nyc_subway_stations WHERE name = 'Broad St';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 15,
+      "question": "What is the total length of streets (in kilometers) in New York City?",
+      "difficulty": "Intermediate",
+      "evidence": "total length of streets refers to Sum(ST_Length(geom)); converting to kilometers refers to dividing by 1000",
+      "SQL": "SELECT Sum(ST_Length(geom)) / 1000 FROM nyc_streets;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 16,
+      "question": "What is the area of Manhattan in acres?",
+      "difficulty": "Intermediate",
+      "evidence": "area of Manhattan refers to Sum(ST_Area(geom)) from nyc_neighborhoods where boroname = 'Manhattan'; converting to acres refers to dividing by 4047",
+      "SQL": "SELECT Sum(ST_Area(geom)) / 4047 FROM nyc_neighborhoods WHERE boroname = 'Manhattan';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 17,
+      "question": "What is the area of Manhattan in acres?",
+      "difficulty": "Intermediate",
+      "evidence": "area of Manhattan refers to Sum(ST_Area(geom)) from nyc_census_blocks where boroname = 'Manhattan'; converting to acres refers to dividing by 4047",
+      "SQL": "SELECT Sum(ST_Area(geom)) / 4047 FROM nyc_census_blocks WHERE boroname = 'Manhattan';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 18,
+      "question": "What is the most westerly subway station?",
+      "difficulty": "Intermediate",
+      "evidence": "most westerly refers to the station with the lowest ST_X value; need to order by ST_X(geom) and limit 1",
+      "SQL": "SELECT ST_X(geom), name FROM nyc_subway_stations ORDER BY ST_X(geom) LIMIT 1;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 19,
+      "question": "How long is 'Columbus Cir' (aka Columbus Circle)?",
+      "difficulty": "Intermediate",
+      "evidence": "length refers to ST_Length(geom); 'Columbus Cir' refers to name = 'Columbus Cir'",
+      "SQL": "SELECT ST_Length(geom) FROM nyc_streets WHERE name = 'Columbus Cir';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 20,
+      "question": "What is the length of streets in New York City, summarized by type?",
+      "difficulty": "Intermediate",
+      "evidence": "length of streets refers to Sum(ST_Length(geom)); summarized by type refers to GROUP BY type",
+      "SQL": "SELECT type, Sum(ST_Length(geom)) AS length FROM nyc_streets GROUP BY type ORDER BY length DESC;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 21,
+      "question": "Which neighborhood does the Broad Street subway station intersect?",
+      "difficulty": "Intermediate",
+      "evidence": "Broad Street subway station refers to name = 'Broad St'; need to convert geom to text using ST_AsText",
+      "SQL": "SELECT name, ST_AsText(geom) FROM nyc_subway_stations WHERE name = 'Broad St';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 22,
+      "question": "What are the streets nearby Broad Street subway station?",
+      "difficulty": "Advanced",
+      "evidence": "streets nearby refers to ST_DWithin; Broad Street subway station location is represented by POINT(583571 4506714) in SRID 26918; nearby distance is 10 units",
+      "SQL": "SELECT name FROM nyc_streets WHERE ST_DWithin(geom, ST_GeomFromText('POINT(583571 4506714)',26918), 10);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 23,
+      "question": "What is the geometry value for the street named 'Atlantic Commons'?",
+      "difficulty": "Intermediate",
+      "evidence": "geometry value refers to ST_AsText(geom); 'Atlantic Commons' refers to name = 'Atlantic Commons'",
+      "SQL": "SELECT ST_AsText(geom) FROM nyc_streets WHERE name = 'Atlantic Commons';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 24,
+      "question": "What neighborhood and borough is Atlantic Commons in?",
+      "difficulty": "Advanced",
+      "evidence": "Atlantic Commons is represented by the linestring LINESTRING(586782 4504202,586864 4504216) in SRID 26918; need to find neighborhoods that intersect with this linestring",
+      "SQL": "SELECT name, boroname FROM nyc_neighborhoods WHERE ST_Intersects(geom, ST_GeomFromText('LINESTRING(586782 4504202,586864 4504216)', 26918));"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 25,
+      "question": "What streets does Atlantic Commons join with?",
+      "difficulty": "Advanced",
+      "evidence": "streets that join with Atlantic Commons refers to streets within a very small distance (0.1) of the linestring representing Atlantic Commons",
+      "SQL": "SELECT name FROM nyc_streets WHERE ST_DWithin(geom, ST_GeomFromText('LINESTRING(586782 4504202,586864 4504216)', 26918), 0.1);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 26,
+      "question": "Approximately how many people live on (within 50 meters of) Atlantic Commons?",
+      "difficulty": "Advanced",
+      "evidence": "people living within 50 meters refers to Sum(popn_total) from census blocks within 50 units distance of the Atlantic Commons linestring",
+      "SQL": "SELECT Sum(popn_total) FROM nyc_census_blocks WHERE ST_DWithin(geom, ST_GeomFromText('LINESTRING(586782 4504202,586864 4504216)', 26918), 50);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 27,
+      "question": "What neighborhood contains Broad St station?",
+      "difficulty": "Advanced",
+      "evidence": "neighborhood contains station refers to ST_Contains(neighborhoods.geom, subways.geom); Broad St station refers to subways.name = 'Broad St'",
+      "SQL": "SELECT subways.name AS subway_name, neighborhoods.name AS neighborhood_name, neighborhoods.boroname AS borough FROM nyc_neighborhoods AS neighborhoods JOIN nyc_subway_stations AS subways ON ST_Contains(neighborhoods.geom, subways.geom) WHERE subways.name = 'Broad St';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 28,
+      "question": "What is the population and racial make-up of the neighborhoods of Manhattan?",
+      "difficulty": "Advanced",
+      "evidence": "population refers to Sum(census.popn_total); racial make-up refers to percentage of white and black population; neighborhoods in Manhattan refers to neighborhoods.boroname = 'Manhattan'",
+      "SQL": "SELECT neighborhoods.name AS neighborhood_name, Sum(census.popn_total) AS population, 100.0 * Sum(census.popn_white) / Sum(census.popn_total) AS white_pct, 100.0 * Sum(census.popn_black) / Sum(census.popn_total) AS black_pct FROM nyc_neighborhoods AS neighborhoods JOIN nyc_census_blocks AS census ON ST_Intersects(neighborhoods.geom, census.geom) WHERE neighborhoods.boroname = 'Manhattan' GROUP BY neighborhoods.name ORDER BY white_pct DESC;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 29,
+      "question": "What is the baseline NYC racial makeup?",
+      "difficulty": "Intermediate",
+      "evidence": "baseline racial makeup refers to percentage of white and black population for the entire city",
+      "SQL": "SELECT 100.0 * Sum(popn_white) / Sum(popn_total) AS white_pct, 100.0 * Sum(popn_black) / Sum(popn_total) AS black_pct, Sum(popn_total) AS popn_total FROM nyc_census_blocks;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 30,
+      "question": "What is the distinct subway routes in NYC?",
+      "difficulty": "Easy",
+      "evidence": "distinct subway routes refers to DISTINCT routes from nyc_subway_stations",
+      "SQL": "SELECT DISTINCT routes FROM nyc_subway_stations;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 31,
+      "question": "What are all the A-train stations in NYC?",
+      "difficulty": "Intermediate",
+      "evidence": "A-train stations refers to subway stations where routes column contains 'A'; this is checked using strpos(subways.routes,'A') > 0",
+      "SQL": "SELECT DISTINCT routes FROM nyc_subway_stations AS subways WHERE strpos(subways.routes,'A') > 0;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 32,
+      "question": "After 9/11, the 'Battery Park' neighborhood was off limits for several days. How many people had to be evacuated?",
+      "difficulty": "Advanced",
+      "evidence": "population of 'Battery Park' refers to Sum(popn_total) from nyc_census_blocks where neighborhood name = 'Battery Park'",
+      "SQL": "SELECT Sum(popn_total) FROM nyc_neighborhoods AS n JOIN nyc_census_blocks AS c ON ST_Intersects(n.geom, c.geom) WHERE n.name = 'Battery Park';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 33,
+      "question": "What neighborhood has the highest population density (persons/km2)?",
+      "difficulty": "Advanced",
+      "evidence": "population density refers to Sum(popn_total) / (ST_Area(geom) / 1000000.0); need to group by neighborhood name and order by density",
+      "SQL": "SELECT n.name, Sum(c.popn_total) / (ST_Area(n.geom) / 1000000.0) AS popn_per_sqkm FROM nyc_census_blocks AS c JOIN nyc_neighborhoods AS n ON ST_Intersects(c.geom, n.geom) GROUP BY n.name, n.geom ORDER BY 2 DESC;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 34,
+      "question": "What is the total population of the 'West Village' neighborhood in New York City?",
+      "difficulty": "Advanced",
+      "evidence": "population of 'West Village' refers to Sum(popn_total) from nyc_census_blocks where neighborhood name = 'West Village'",
+      "SQL": "SELECT Sum(popn_total) FROM nyc_neighborhoods neighborhoods JOIN nyc_census_blocks blocks ON ST_Intersects(neighborhoods.geom, blocks.geom) WHERE neighborhoods.name = 'West Village';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 35,
+      "question": "Which geographic coordinates correspond to the 'Broad St' subway station?",
+      "difficulty": "Intermediate",
+      "evidence": "geographic coordinates refers to ST_AsText(ST_Transform(geom,4326)); 'Broad St' subway station refers to name = 'Broad St'",
+      "SQL": "SELECT ST_AsText(ST_Transform(geom,4326)) FROM nyc_subway_stations WHERE name = 'Broad St';"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 36,
+      "question": "What is the length of all streets in New York, as measured in UTM 18?",
+      "difficulty": "Easy",
+      "evidence": "length of streets refers to Sum(ST_Length(geom))",
+      "SQL": "SELECT Sum(ST_Length(geom)) FROM nyc_streets;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 37,
+      "question": "What is the WKT definition of SRID 2831?",
+      "difficulty": "Easy",
+      "evidence": "WKT definition refers to srtext from spatial_ref_sys where SRID = 2831",
+      "SQL": "SELECT srtext FROM spatial_ref_sys WHERE SRID = 2831;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 38,
+      "question": "What is the length of all streets in New York, as measured in SRID 2831?",
+      "difficulty": "Intermediate",
+      "evidence": "length of streets refers to Sum(ST_Length(ST_Transform(geom,2831)))",
+      "SQL": "SELECT Sum(ST_Length(ST_Transform(geom,2831))) FROM nyc_streets;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 39,
+      "question": "How many streets cross the 74th meridian?",
+      "difficulty": "Advanced",
+      "evidence": "streets crossing the 74th meridian refers to ST_Intersects with a linestring representing the 74th meridian",
+      "SQL": "SELECT Count(*) FROM nyc_streets WHERE ST_Intersects(ST_Transform(geom, 4326), 'SRID=4326;LINESTRING(-74 20, -74 60)');"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 40,
+      "question": "How many streets cross the 74th meridian?",
+      "difficulty": "Advanced",
+      "evidence": "streets crossing the 74th meridian refers to ST_Intersects with a linestring representing the 74th meridian",
+      "SQL": "SELECT Count(*) FROM nyc_streets WHERE ST_Intersects(geom, ST_Transform(ST_Segmentize('SRID=4326;LINESTRING(-74 20, -74 60)'::geometry,0.001), 26918));"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 41,
+      "question": "What distance between Los Angeles and Paris using geometry?",
+      "difficulty": "Advanced",
+      "evidence": "distance between two points refers to ST_Distance using geometry",
+      "SQL": "SELECT ST_Distance('SRID=4326;POINT(-118.4079 33.9434)'::geometry, 'SRID=4326;POINT(2.5559 49.0083)'::geometry);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 42,
+      "question": "What distance between Los Angeles and Paris using geography?",
+      "difficulty": "Advanced",
+      "evidence": "distance between two points refers to ST_Distance using geography",
+      "SQL": "SELECT ST_Distance('SRID=4326;POINT(-118.4079 33.9434)'::geography, 'SRID=4326;POINT(2.5559 49.0083)'::geography);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 43,
+      "question": "What is the closest approach to iceland on lax/cdg route?",
+      "difficulty": "Advanced",
+      "evidence": "closest approach refers to ST_Distance between a linestring and a point",
+      "SQL": "SELECT ST_Distance(ST_GeographyFromText('LINESTRING(-118.4079 33.9434, 2.5559 49.0083)'), ST_GeographyFromText('POINT(-22.6056 63.9850)'));"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 44,
+      "question": "What is the distance between Los Angeles International Airport (LAX) and Narita International Airport (NRT) using geometric (flat plane) different spatial distance method?",
+      "difficulty": "Advanced",
+      "evidence": "distance between two points refers to ST_Distance using geometry",
+      "SQL": "SELECT ST_Distance(ST_GeometryFromText('Point(-118.4079 33.9434)'), ST_GeometryFromText('Point(139.733 35.567)')) AS geometry_distance;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 45,
+      "question": "What is the distance between Los Angeles International Airport (LAX) and Narita International Airport (NRT) using geographic (spherical Earth) different spatial distance method?",
+      "difficulty": "Advanced",
+      "evidence": "distance between two points refers to ST_Distance using geography",
+      "SQL": "SELECT ST_Distance(ST_GeographyFromText('Point(-118.4079 33.9434)'), ST_GeographyFromText('Point(139.733 35.567)')) AS geography_distance;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 46,
+      "question": "How far is New York from Seattle? What are the units of the answer?",
+      "difficulty": "Advanced",
+      "evidence": "distance between two points refers to ST_Distance using geography",
+      "SQL": "SELECT ST_Distance('POINT(-74.0064 40.7142)'::geography, 'POINT(-122.3331 47.6097)'::geography);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 47,
+      "question": "What is the total length of all streets in New York, calculated on the spheroid?",
+      "difficulty": "Advanced",
+      "evidence": "total length of streets refers to Sum(ST_Length(Geography(ST_Transform(geom,4326))))",
+      "SQL": "SELECT Sum(ST_Length(Geography(ST_Transform(geom,4326)))) FROM nyc_streets;"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 48,
+      "question": "Does 'POINT(1 2.0001)' intersect with 'POLYGON((0 0, 0 2, 2 2, 2 0, 0 0))' in geography?",
+      "difficulty": "Intermediate",
+      "evidence": "intersection refers to ST_Intersects using geography",
+      "SQL": "SELECT ST_Intersects('POINT(1 2.0001)'::geography, 'POLYGON((0 0,0 2,2 2,2 0,0 0))'::geography);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 49,
+      "question": "Does 'POINT(1 2.0001)' intersect with 'POLYGON((0 0, 0 2, 2 2, 2 0, 0 0))' in geometry?",
+      "difficulty": "Intermediate",
+      "evidence": "intersection refers to ST_Intersects using geometry",
+      "SQL": "SELECT ST_Intersects('POINT(1 2.0001)'::geometry, 'POLYGON((0 0,0 2,2 2,2 0,0 0))'::geometry);"
+    },
+    {
+      "db_id": "nyc_data",
+      "id": 50,
+      "question": "What is the the geometry of Broad St in NYC?",
+      "difficulty": "Intermediate",
+      "evidence": "geometry refers to ST_AsEWKT(geom); 'Broad St' refers to name = 'Broad St'",
+      "SQL": "SELECT ST_AsEWKT(geom) FROM nyc_subway_stations WHERE name = 'Broad St';"
+    }
+  ]
+
+
+Response:
+--------------------------------------------------
+Below you will find ten (10) fresh re-phrasings for every one of the fifty original questions (50 × 10 = 500).  
+Nothing about the associated SQL, evidence, difficulty, or database changes; only the wording of each question has been varied.
+
+For compactness, I list them grouped by the original item-id.  
+(If you need the full JSON objects later, simply copy the desired re-phrased question into the proper position while keeping the rest of the fields identical to the original.)
+
+```
+{
+  "1": [
+    "List every neighborhood name found in New York City.",
+    "Show me the names of all NYC neighborhoods.",
+    "Which neighborhoods exist across New York City (names only)?",
+    "Provide the full set of neighborhood names in NY City.",
+    "Give a roster of neighborhoods in New York City.",
+    "Enumerate NYC neighborhoods by name.",
+    "What are all neighborhood names city-wide in NYC?",
+    "Can you return the names for every NYC neighborhood?",
+    "Display the neighborhood names throughout New York City.",
+    "Retrieve a list of all neighborhood names in New York City."
+  ],
+
+  "2": [
+    "List the names of every Brooklyn neighborhood.",
+    "Show me Brooklyn’s neighborhood names.",
+    "Which neighborhoods are located in Brooklyn (name them)?",
+    "Provide the full roster of Brooklyn neighborhoods.",
+    "Give all neighborhood names that fall within the borough of Brooklyn.",
+    "Enumerate Brooklyn neighborhoods by name.",
+    "Return all neighborhood names for Brooklyn, NY.",
+    "Can you pull the list of neighborhoods found in Brooklyn?",
+    "Display neighborhood names that belong to Brooklyn.",
+    "Fetch every Brooklyn neighborhood name."
+  ],
+
+  "3": [
+    "How many characters are in each Brooklyn neighborhood name?",
+    "Return the letter count for every neighborhood name in Brooklyn.",
+    "Provide the length (in letters) of each Brooklyn neighborhood’s name.",
+    "For Brooklyn neighborhoods, list the number of letters in their names.",
+    "Show character counts of neighborhood names within Brooklyn.",
+    "What is the name length of every Brooklyn neighborhood (in letters)?",
+    "Give the letter totals for the names of Brooklyn neighborhoods.",
+    "Compute characters per name for neighborhoods in Brooklyn.",
+    "Display name-lengths (letter count) of each Brooklyn neighborhood.",
+    "List, for every Brooklyn neighborhood, how long the name is (letters)."
+  ],
+
+  "4": [
+    "What are the mean and standard deviation of name lengths for Brooklyn neighborhoods?",
+    "Give me the average and SD of letters in Brooklyn neighborhood names.",
+    "Compute the mean number of characters and its standard deviation for Brooklyn neighborhood names.",
+    "Provide both average length and standard deviation of neighborhood names in Brooklyn.",
+    "For Brooklyn, what’s the avg. name length and its stddev across neighborhoods?",
+    "Show the mean letters per neighborhood name in Brooklyn along with the SD.",
+    "Return the average character count and standard deviation for Brooklyn neighborhood names.",
+    "How long, on average, are Brooklyn neighborhood names and what is the variation?",
+    "List the average length plus standard deviation of Brooklyn neighborhood labels.",
+    "Report mean & standard deviation of the character counts of Brooklyn neighborhood names."
+  ],
+
+  "5": [
+    "Give the average neighborhood name length for each NYC borough.",
+    "What is the mean character count of neighborhood names, broken down by borough?",
+    "Compute average letters per neighborhood name in every borough of NYC.",
+    "Show average name lengths for neighborhoods, reported per borough.",
+    "Provide borough-wise averages of neighborhood name lengths in NYC.",
+    "Return, for each borough, the mean length of its neighborhood names.",
+    "List boroughs with their average neighborhood name character counts.",
+    "What’s the average number of letters in neighborhood names for each borough?",
+    "Display the per-borough average length of neighborhood names in NYC.",
+    "Calculate and list average neighborhood name length for all NYC boroughs."
+  ],
+
+  "6": [
+    "How many total rows are present in the nyc_streets table?",
+    "Return the record count of the nyc_streets dataset.",
+    "What is the total number of entries in nyc_streets?",
+    "Provide the row count for table nyc_streets.",
+    "Count every record stored in nyc_streets.",
+    "Show the total number of street records in the NYC streets table.",
+    "Give me the size (row total) of the nyc_streets table.",
+    "How many street segments does nyc_streets contain?",
+    "Fetch the total count of rows within nyc_streets.",
+    "Report how many records exist in the nyc_streets table."
+  ],
+
+  "7": [
+    "Count the NYC streets whose names begin with the letter ‘B’.",
+    "How many street names in NYC start with “B”?",
+    "Return the number of streets that start with ‘B’ across NYC.",
+    "Provide a tally of NYC streets beginning with the letter B.",
+    "List how many streets in New York City have names starting with B.",
+    "What is the count of city streets that commence with ‘B’?",
+    "Show total streets starting with the character B in NYC.",
+    "Give the total number of ‘B’-initial streets in NYC.",
+    "How many NYC street records have names beginning with B?",
+    "Calculate the amount of streets whose names start with a ‘B’ in NYC."
+  ],
+
+  "8": [
+    "What is New York City’s total population?",
+    "Provide the sum of NYC’s population.",
+    "Return the overall population figure for New York City.",
+    "Give the total headcount across the entire city of New York.",
+    "How many people live in NYC altogether?",
+    "Show the cumulative population of New York City.",
+    "Compute NYC’s population in total.",
+    "Display the total number of residents in New York City.",
+    "What is the overall population count for NYC?",
+    "Fetch the sum of the population for the whole of New York City."
+  ],
+
+  "9": [
+    "How many people reside in The Bronx?",
+    "Return the total population for the borough of The Bronx.",
+    "Provide The Bronx’s population count.",
+    "Give the cumulative population figure for The Bronx.",
+    "What is the population size of The Bronx borough?",
+    "Show total residents living in The Bronx.",
+    "Compute the population of The Bronx in NYC.",
+    "Display the sum of people who live in The Bronx.",
+    "What’s The Bronx’s total headcount?",
+    "Fetch The Bronx borough population."
+  ],
+
+  "10": [
+    "For each borough, how many neighborhoods does it contain?",
+    "Return neighborhood counts per NYC borough.",
+    "List the number of neighborhoods in every borough.",
+    "Provide how many neighborhoods exist within each borough of NYC.",
+    "Show borough-wise neighborhood totals in NYC.",
+    "Give a count of neighborhoods for each NYC borough.",
+    "Display neighborhood quantity per borough across New York City.",
+    "Compute the totals of neighborhoods grouped by borough.",
+    "How many neighborhoods are there in each NYC borough?",
+    "Report, by borough, the number of neighborhoods."
+  ],
+
+  "11": [
+    "What percentage of each borough’s population is white?",
+    "Provide white-population percentages for every borough in NYC.",
+    "Return, by borough, the share of residents who are white.",
+    "Show borough-level percent white population in New York City.",
+    "List the proportion of white residents for each NYC borough.",
+    "Compute the white-population rate per borough.",
+    "Display percentage white in every borough of NYC.",
+    "Give the fraction (in %) of white population across NYC boroughs.",
+    "For NYC boroughs, what percent of people are white?",
+    "Report borough-wise white demographic percentages."
+  ],
+
+  "12": [
+    "How large is the ‘West Village’ neighborhood (area)?",
+    "Return the area of West Village.",
+    "Provide the size of the West Village neighborhood.",
+    "What is the spatial area of West Village in NYC?",
+    "Give the area measurement for the neighborhood called West Village.",
+    "Show West Village’s area.",
+    "Compute the area for West Village neighborhood.",
+    "Display the acreage (raw units) of West Village.",
+    "What is the measured area of the neighborhood West Village?",
+    "Fetch the area figure for West Village."
+  ],
+
+  "13": [
+    "Identify the geometry type and length of ‘Pelham St’.",
+    "What kind of geometry does Pelham St have, and how long is it?",
+    "Give the geometry classification plus the length of Pelham St.",
+    "For Pelham St, return its geometry type and its length.",
+    "Show geometry type and total length for street ‘Pelham St’.",
+    "Provide both the geometry type and distance measurement for Pelham St.",
+    "What geometry type is stored for Pelham St and what’s its length?",
+    "Display Pelham St’s geometry type along with its length.",
+    "Tell me the geometry kind plus length of the street Pelham St.",
+    "Return Pelham St’s geometry type and how long it runs."
+  ],
+
+  "14": [
+    "Produce the GeoJSON for the ‘Broad St’ subway station.",
+    "What is Broad St station’s geometry in GeoJSON format?",
+    "Show the GeoJSON representation of Broad St subway stop.",
+    "Return the GeoJSON string for the subway station named Broad St.",
+    "Give Broad St subway station as GeoJSON.",
+    "Display Broad St station’s geometry encoded as GeoJSON.",
+    "Provide GeoJSON output for the Broad St subway station.",
+    "Fetch the GeoJSON of Broad St station.",
+    "Deliver the geometry of Broad St station in GeoJSON form.",
+    "What does Broad St subway station look like in GeoJSON?"
+  ],
+
+  "15": [
+    "Calculate the total street length in NYC in kilometers.",
+    "What is the sum of all street lengths (km) in New York City?",
+    "Give the combined length of NYC streets, converted to kilometers.",
+    "Return total NYC street mileage expressed in kilometers.",
+    "Provide the overall length of every NYC street segment in km.",
+    "Show aggregate length of streets across NYC (kilometers).",
+    "How many kilometers of streets exist in New York City?",
+    "Compute the total street distance in NYC (km).",
+    "Display the entire length of NYC’s street network in kilometers.",
+    "List NYC’s cumulative street length (in km)."
+  ],
+
+  "16": [
+    "What is Manhattan’s total area measured in acres (neighborhood data)?",
+    "Return Manhattan’s area in acres using neighborhood records.",
+    "Provide the acreage for the borough of Manhattan (from neighborhoods).",
+    "Give Manhattan’s size in acres as derived from neighborhood geometries.",
+    "How many acres does Manhattan cover (neighborhood table)?",
+    "Show Manhattan’s area (acres) according to neighborhood polygons.",
+    "Compute the total acres of Manhattan via neighborhood data.",
+    "Display area of Manhattan in acres, based on neighborhoods.",
+    "What acreage figure represents Manhattan using neighborhood geometries?",
+    "Fetch Manhattan’s area in acres from neighborhood information."
+  ],
+
+  "17": [
+    "Using census blocks, how many acres make up Manhattan?",
+    "Return Manhattan’s area (acres) based on census block geometries.",
+    "Provide the size of Manhattan in acres via the census blocks table.",
+    "What is Manhattan’s acreage according to census block data?",
+    "Give Manhattan’s total area in acres (census perspective).",
+    "Show total acres covered by Manhattan using census blocks.",
+    "Calculate Manhattan’s area in acres with census block geometry.",
+    "Display Manhattan acreage derived from census blocks.",
+    "What is the census-block-based acreage of Manhattan?",
+    "Fetch Manhattan’s area in acres as measured by census blocks."
+  ],
+
+  "18": [
+    "Which subway station lies furthest west in NYC?",
+    "Identify the western-most subway station.",
+    "What station is the most westerly point in the NYC subway network?",
+    "Return the subway station positioned farthest to the west.",
+    "Name the station with the lowest X coordinate (most westerly).",
+    "Which NYC subway stop is located at the western extreme?",
+    "Provide the name of the subway station that is furthest west.",
+    "Show the station that sits at the most westerly longitude.",
+    "Give the westernmost subway station in NYC.",
+    "List the subway stop that is located farthest west geographically."
+  ],
+
+  "19": [
+    "How long is the street segment known as ‘Columbus Cir’?",
+    "Return the length of Columbus Circle street.",
+    "Provide the total length measurement of Columbus Cir.",
+    "What is the distance of the street called Columbus Cir?",
+    "Give the length for Columbus Cir street segment.",
+    "Show how long ‘Columbus Cir’ runs.",
+    "Compute the length of Columbus Circle (street).",
+    "Display the total street length for Columbus Cir.",
+    "What length does the Columbus Cir street have?",
+    "Fetch the length of Columbus Cir in NYC."
+  ],
+
+  "20": [
+    "Summarize street lengths in NYC by their type.",
+    "Provide total length of streets grouped by street type.",
+    "Return NYC street length per type, ordered by size.",
+    "How much street length does each street type comprise in New York City?",
+    "List street types with their cumulative lengths in NYC.",
+    "Show aggregate street length classified by type.",
+    "Give total street distance for every street type in NYC.",
+    "Display street length statistics by type for New York City.",
+    "Compute and rank lengths of streets by their type in NYC.",
+    "Report the total kilometers per street type city-wide."
+  ],
+
+  "21": [
+    "Which neighborhood intersects the Broad St subway stop?",
+    "Identify the neighborhood that overlaps Broad St station.",
+    "What neighborhood (and its geometry) intersects with the Broad St subway station?",
+    "Return the neighborhood intersecting the subway station named Broad St.",
+    "Find the neighborhood whose area crosses Broad St station.",
+    "Give the neighborhood intersecting with Broad St subway stop.",
+    "Show the neighborhood that Broad St station lies within or touches.",
+    "Which NYC neighborhood does the Broad St station intersect?",
+    "Provide the neighborhood intersecting Broad St subway station.",
+    "List neighborhood(s) overlapping Broad St station."
+  ],
+
+  "22": [
+    "List streets located within 10 m of Broad St subway station.",
+    "Which streets lie close to (within 10 units) Broad St subway stop?",
+    "Return names of streets near the Broad St station (10-unit radius).",
+    "Give the streets in proximity to Broad St subway station.",
+    "What streets are found nearby Broad St station (distance ≤10)?",
+    "Show street names that fall within 10 meters of the Broad St subway point.",
+    "Provide all streets in the immediate vicinity of Broad St station.",
+    "Display nearby streets around Broad St subway stop (10-unit buffer).",
+    "Identify streets adjacent to the Broad St subway station.",
+    "Fetch street names close to Broad St station (within 10 units)."
+  ],
+
+  "23": [
+    "What is the WKT geometry for the street ‘Atlantic Commons’?",
+    "Return Atlantic Commons street geometry as text.",
+    "Provide the textual geometry (WKT) of Atlantic Commons.",
+    "Show the geometry value for Atlantic Commons (as text).",
+    "Give Atlantic Commons’ geometry in WKT format.",
+    "Display Atlantic Commons geometry string.",
+    "What is the ST_AsText output for street Atlantic Commons?",
+    "Fetch the WKT representation of Atlantic Commons.",
+    "Produce the geometry of Atlantic Commons in text form.",
+    "Return the shape (as text) of Atlantic Commons street."
+  ],
+
+  "24": [
+    "Which neighborhood and borough contain Atlantic Commons?",
+    "Identify the neighborhood (and borough) where Atlantic Commons is located.",
+    "Return the neighborhood and its borough intersecting Atlantic Commons.",
+    "What neighborhood does Atlantic Commons lie in, and in which borough?",
+    "Provide neighborhood plus borough for Atlantic Commons street.",
+    "Show the matching neighborhood/borough that Atlantic Commons falls within.",
+    "Give neighborhood and borough names for the location of Atlantic Commons.",
+    "List the neighborhood as well as the borough Atlantic Commons sits in.",
+    "Where is Atlantic Commons (neighborhood and borough)?",
+    "Which borough/neighborhood intersects the Atlantic Commons line?"
+  ],
+
+  "25": [
+    "What streets connect to Atlantic Commons?",
+    "List the streets that join with Atlantic Commons.",
+    "Identify streets intersecting or touching Atlantic Commons.",
+    "Return names of streets connecting to Atlantic Commons.",
+    "Provide streets that link up with Atlantic Commons street.",
+    "Show streets that meet or join Atlantic Commons.",
+    "Which street segments adjoin Atlantic Commons?",
+    "Give the names of streets that tie into Atlantic Commons.",
+    "Display the set of streets intersecting Atlantic Commons.",
+    "Fetch streets that connect with Atlantic Commons."
+  ],
+
+  "26": [
+    "Approximately how many residents live within 50 m of Atlantic Commons?",
+    "Estimate the population within 50 meters of Atlantic Commons.",
+    "How many people reside in a 50-meter buffer around Atlantic Commons?",
+    "Return the population living near Atlantic Commons (≤50 m).",
+    "Provide the total number of people within 50 m of Atlantic Commons.",
+    "What is the population count for areas 50 m around Atlantic Commons?",
+    "Compute people living within fifty meters of Atlantic Commons.",
+    "Display the count of residents close (50 m) to Atlantic Commons.",
+    "Give an approximate population near Atlantic Commons street (50 m zone).",
+    "Fetch population within 50 meters from Atlantic Commons."
+  ],
+
+  "27": [
+    "Which neighborhood contains the Broad St subway station?",
+    "Identify the neighborhood (and borough) that fully contains Broad St station.",
+    "Return neighborhood and borough enclosing the Broad St station.",
+    "What neighborhood does Broad St station fall inside?",
+    "Provide containing neighborhood of the Broad St subway stop.",
+    "Show the neighborhood that encapsulates Broad St station.",
+    "Name the neighborhood and borough that hold Broad St station.",
+    "Which NYC neighborhood contains Broad St station within its borders?",
+    "Give the neighborhood encompassing Broad St subway station.",
+    "List the containing neighborhood & borough for Broad St station."
+  ],
+
+  "28": [
+    "What are the populations and race breakdowns of Manhattan neighborhoods?",
+    "Return population plus white & black percentages for neighborhoods in Manhattan.",
+    "Provide demographic (population, %white, %black) figures for each Manhattan neighborhood.",
+    "Show the racial composition and population totals for Manhattan neighborhoods.",
+    "List Manhattan neighborhoods with their pop totals and white/black percentages.",
+    "Give population counts and racial mix (white, black) by neighborhood in Manhattan.",
+    "Display populations and race stats for all neighborhoods within Manhattan.",
+    "Compute population and racial makeup for Manhattan’s neighborhoods.",
+    "For every Manhattan neighborhood, present population and white/black share.",
+    "Fetch demographic breakdown (pop, %white, %black) for Manhattan neighborhoods."
+  ],
+
+  "29": [
+    "What is NYC’s overall racial makeup baseline?",
+    "Provide the city-wide percentages of white and black population in NYC.",
+    "Return NYC’s baseline white % and black %, along with total population.",
+    "Show overall demographic proportions (white, black) for New York City.",
+    "Give NYC’s aggregate racial composition and total population.",
+    "Display the baseline racial splits for NYC (white vs black).",
+    "Compute city-wide white and black percentages in NYC.",
+    "What are the overall white and black shares of NYC’s population?",
+    "List baseline racial breakdown for NYC (white%, black%, total pop).",
+    "Fetch NYC total population plus white & black percentages."
+  ],
+
+  "30": [
+    "List all unique subway routes in New York City.",
+    "What distinct routes are served by NYC subway stations?",
+    "Provide the set of different subway routes across NYC.",
+    "Return every unique route appearing in the subway stations table.",
+    "Show distinct subway route identifiers in NYC.",
+    "Give all unique route designations present for NYC subways.",
+    "Display the list of distinct subway routes city-wide.",
+    "Fetch the distinct values found in the routes column of subway stations.",
+    "Which subway routes exist in NYC (unique list)?",
+    "Enumerate unique NYC subway routes."
+  ],
+
+  "31": [
+    "Which stations serve the A train in NYC?",
+    "List all NYC subway stations on the A route.",
+    "Return subway stops where route list includes ‘A’.",
+    "Provide stations that the A train stops at in NYC.",
+    "Show the stations containing the A line.",
+    "Give all subway stations serviced by the A train.",
+    "Display every NYC station whose routes include an ‘A’.",
+    "Fetch the stations on route A within NYC.",
+    "Identify all A-train stations across New York City.",
+    "Which subway stops are part of the A line?"
+  ],
+
+  "32": [
+    "Post-9/11, about how many people needed to evacuate the Battery Park neighborhood?",
+    "Estimate the number of residents evacuated from Battery Park after 9/11.",
+    "How many individuals were displaced when Battery Park was closed following 9/11?",
+    "Provide total population of Battery Park that had to be evacuated after the 9/11 attacks.",
+    "What was the evacuation headcount for Battery Park in the aftermath of 9/11?",
+    "Return the population figure for Battery Park that required evacuation post-9/11.",
+    "Give the number of Battery Park residents affected by the 9/11 exclusion zone.",
+    "Show how many people lived in Battery Park and thus had to evacuate after 9/11.",
+    "Compute the evacuee total for Battery Park following 9/11.",
+    "Display the population of Battery Park neighborhood at the time of the 9/11 evacuation."
+  ],
+
+  "33": [
+    "Which NYC neighborhood has the highest population density (people per km²)?",
+    "Identify the most densely populated neighborhood in New York City.",
+    "Return the neighborhood with the greatest population density in NYC.",
+    "What neighborhood tops the list for population density in NYC?",
+    "Provide the NYC neighborhood with the highest residents-per-km² figure.",
+    "Show the neighborhood exhibiting maximum population density in NYC.",
+    "Name the densest neighborhood in New York City.",
+    "Which neighborhood in NYC is the most crowded per square kilometer?",
+    "List the neighborhood that leads in population density within NYC.",
+    "Give the top NYC neighborhood by population density (persons/km²)."
+  ],
+
+  "34": [
+    "How many people live in the West Village neighborhood?",
+    "Return the total population of West Village in NYC.",
+    "Provide the resident count for the West Village neighborhood.",
+    "What is the population size of West Village?",
+    "Give the total number of inhabitants in West Village.",
+    "Show West Village’s population figure.",
+    "Compute the total population for the neighborhood West Village.",
+    "Display the population of the West Village area.",
+    "What is West Village’s headcount?",
+    "Fetch population of West Village neighborhood."
+  ],
+
+  "35": [
+    "What are the longitude/latitude coordinates for the Broad St subway station?",
+    "Return the geographic coordinates (WGS 84) of Broad St station.",
+    "Provide the transformed coordinates (EPSG:4326) for the Broad St subway stop.",
+    "Show Broad St station’s coordinates in latitude and longitude.",
+    "Give Broad St subway station’s geographic point (lat/lon).",
+    "Display the ST_AsText output (in 4326) of Broad St station.",
+    "Fetch the geographic position (lat/long) of the Broad St station.",
+    "What is the coordinate pair of Broad St subway station (WGS84)?",
+    "List Broad St station coordinates expressed in geographic terms.",
+    "Provide Broad St station’s position after transforming to SRID 4326."
+  ],
+
+  "36": [
+    "What is the aggregate street length in NYC measured in UTM 18?",
+    "Return the total length of all NYC streets in their native UTM 18 units.",
+    "Provide cumulative street length across NYC (UTM 18).",
+    "How long are all NYC streets when summed in UTM 18?",
+    "Give total length of street geometries (UTM 18) for New York City.",
+    "Show the combined UTM 18 length of the nyc_streets table.",
+    "Compute NYC street length in UTM 18 coordinates.",
+    "Display overall street distance (UTM 18) within NYC.",
+    "List the summed length of NYC streets as stored in UTM 18 CRS.",
+    "Fetch total street length for NYC measured in the table’s SRID (UTM 18)."
+  ],
+
+  "37": [
+    "What is the WKT text for spatial reference 2831?",
+    "Return the SRText definition of SRID 2831.",
+    "Provide the Well-Known Text description for SRID 2831.",
+    "Show the WKT representation of the coordinate system 2831.",
+    "Give the srtext string for SRID 2831.",
+    "Display the WKT definition associated with EPSG/SRID 2831.",
+    "Fetch the spatial reference text for SRID 2831.",
+    "What WKT describes SRID 2831?",
+    "List the full WKT for the spatial reference with ID 2831.",
+    "Provide SRID 2831’s WKT definition."
+  ],
+
+  "38": [
+    "How long are NYC streets when transformed to SRID 2831?",
+    "Return the total length of streets in NYC after converting to 2831.",
+    "Provide aggregate length of streets measured in SRID 2831.",
+    "Compute summed street length in New York City under SRID 2831.",
+    "Show total NYC street distance following transformation to 2831.",
+    "Give combined length of street geometries in CRS 2831.",
+    "Display the cumulative street length of NYC in SRID 2831 units.",
+    "List overall street length (post-transform to 2831) for NYC.",
+    "Fetch total street length for NYC once converted to SRID 2831.",
+    "What is the aggregate length of NYC streets in coordinate system 2831?"
+  ],
+
+  "39": [
+    "How many NYC streets intersect the 74th meridian?",
+    "Return the count of streets crossing longitude −74°.",
+    "Provide number of street segments that cross the 74° W meridian.",
+    "Count streets whose geometries intersect the 74th meridian line.",
+    "Show how many NYC streets meet the 74th meridian.",
+    "Give the total streets that intersect longitude −74.",
+    "Display the number of streets crossing that specific meridian (−74).",
+    "What is the tally of New York City streets intersecting the 74° meridian?",
+    "Compute the count of streets which cross the 74th meridian.",
+    "List the amount of NYC street geometries intersecting longitude −74."
+  ],
+
+  "40": [
+    "Using a densified meridian, how many streets cross 74° W?",
+    "Return street count intersecting the segmentized 74th meridian.",
+    "Provide number of NYC streets touching the densified −74 meridian line.",
+    "Count street segments intersecting the detailed 74° longitude line.",
+    "Show how many streets intersect the segmentized 74th meridian.",
+    "Give total of streets that cross the finely segmentized 74° meridian.",
+    "Display the count of streets intersecting longitude −74 after segmentize.",
+    "What number of street geometries meet the densified −74 meridian?",
+    "Compute streets crossing the 74th meridian when segmentized.",
+    "List the streets count intersecting longitude −74 (segmentized version)."
+  ],
+
+  "41": [
+    "What is the planar distance from Los Angeles to Paris (geometry)?",
+    "Return geometric distance between LA and Paris airports.",
+    "Provide flat-earth distance (geometry) between LAX and CDG.",
+    "How far apart are Los Angeles and Paris using geometry type?",
+    "Give the geometric distance measurement LA–Paris.",
+    "Show cartesian geometry distance from LAX to CDG.",
+    "Compute geometry-based distance between Los Angeles and Paris.",
+    "Display the ST_Distance (geometry) result for LAX ↔ Paris.",
+    "What distance (geometry) separates LAX and CDG?",
+    "Fetch LA–Paris distance calculated via geometry."
+  ],
+
+  "42": [
+    "What is the great-circle distance from Los Angeles to Paris (geography)?",
+    "Return geographic distance between LAX and CDG.",
+    "Provide spherical-earth distance (geography) LA–Paris.",
+    "How far apart are Los Angeles and Paris using geography type?",
+    "Give the geography-based distance measurement from LAX to CDG.",
+    "Show ST_Distance (geography) from Los Angeles to Paris.",
+    "Compute great-circle (geography) distance between LAX and Paris.",
+    "Display the LA–Paris distance on the spheroid.",
+    "What is the spheroidal distance separating LAX and CDG?",
+    "Fetch the geographic distance from Los Angeles to Paris airports."
+  ],
+
+  "43": [
+    "How close does the LA–Paris route come to Iceland?",
+    "Return the shortest distance between the LAX–CDG path and Iceland.",
+    "Provide closest approach of flight path LA–Paris to Iceland (distance).",
+    "What minimum separation exists between the LA↔Paris line and Iceland?",
+    "Give the nearest distance from the LAX-CDG line to Iceland’s point.",
+    "Show distance at closest point between LA–Paris great circle and Iceland.",
+    "Compute minimal distance of LAX–CDG route to Iceland.",
+    "Display the closest approach distance to Iceland along LA–Paris path.",
+    "What is the least separation between Iceland and the Los Angeles–Paris line?",
+    "Fetch minimal distance from the LA–Paris route to Iceland."
+  ],
+
+  "44": [
+    "Calculate flat-plane distance between LAX and NRT (geometry).",
+    "What geometric distance separates Los Angeles and Tokyo-Narita?",
+    "Provide planar distance LA (LAX) to NRT using geometry.",
+    "Return ST_Distance (geometry) from LAX airport to NRT airport.",
+    "Give flat-earth distance between LAX and Narita (geometry calculation).",
+    "Show cartesian geometry distance for LAX-NRT.",
+    "Compute geometry-type distance Los Angeles Intl to Narita Intl.",
+    "Display the geometry distance LA↔NRT.",
+    "What is the geometry-derived separation from LAX to NRT airport?",
+    "Fetch the flat-plane distance between LAX and NRT."
+  ],
+
+  "45": [
+    "Determine spherical distance between LAX and NRT (geography).",
+    "What is the great-circle distance from Los Angeles to Narita?",
+    "Provide geographic distance between LAX and NRT airports.",
+    "Return ST_Distance (geography) for LAX-NRT.",
+    "Give the geography-based separation of LAX and Narita airports.",
+    "Show LA–NRT spheroidal distance.",
+    "Compute great-circle distance Los Angeles Intl ↔ Narita Intl.",
+    "Display geographic distance measurement from LAX to NRT.",
+    "What distance (geography) lies between LAX and NRT?",
+    "Fetch the spherical distance LA→NRT."
+  ],
+
+  "46": [
+    "How far is New York City from Seattle, and what units are returned?",
+    "Return the geographic distance between NYC and Seattle (include units).",
+    "Provide the NYC-to-Seattle distance calculated using geography type.",
+    "What is the ST_Distance (geography) from New York to Seattle?",
+    "Give the great-circle distance from New York to Seattle and note the units.",
+    "Show how many meters separate Seattle from New York City.",
+    "Compute distance New York ↔ Seattle using geography.",
+    "Display geographic distance NYC to Seattle (include measurement units).",
+    "What distance and units result for New York versus Seattle?",
+    "Fetch NYC-Seattle distance via geography calculation."
+  ],
+
+  "47": [
+    "What is the total spheroidal length of all NYC streets?",
+    "Return summed street length for NYC measured on the spheroid.",
+    "Provide total street distance across New York City (geography length).",
+    "How long are all NYC streets when calculated on a spheroid?",
+    "Give the aggregate spheroidal length for NYC street geometries.",
+    "Show total length (spheroid) of streets in New York.",
+    "Compute street length city-wide using geography length on spheroid.",
+    "Display cumulative spheroidal street length for NYC.",
+    "What is NYC’s street network length calculated on the spheroid surface?",
+    "Fetch total street length in NYC via ST_Length on geography."
+  ],
+
+  "48": [
+    "In geography terms, does point (1, 2.0001) intersect the given polygon?",
+    "Return whether POINT(1 2.0001) intersects the specified polygon (geography).",
+    "Provide the intersection result for point 1/2.0001 and the polygon (as geography).",
+    "Does the point at (1,2.0001) fall inside the polygon using geography type?",
+    "Show whether the geography point intersects that polygon boundary.",
+    "Is POINT(1 2.0001) within or on the polygon using geography?",
+    "Compute ST_Intersects for the geography point and polygon.",
+    "Display true/false: geography point intersects polygon?",
+    "Determine if the given point intersects the polygon in geography.",
+    "Evaluate intersection (geography) between point 1 2.0001 and provided polygon."
+  ],
+
+  "49": [
+    "In geometry space, does point (1, 2.0001) intersect the polygon?",
+    "Return ST_Intersects result for POINT(1 2.0001) and the polygon (geometry).",
+    "Provide whether the geometry point lies within the polygon.",
+    "Does POINT(1 2.0001) intersect that polygon when using geometry?",
+    "Show intersection outcome between point 1 2.0001 and polygon (geometry).",
+    "Is the point at (1,2.0001) inside or touching the polygon (geometry)?",
+    "Compute geometry intersection for the point and polygon.",
+    "Display true/false for geometry point intersecting polygon.",
+    "Determine intersection of the given point with polygon in geometry type.",
+    "Evaluate ST_Intersects (geometry) for point 1 2.0001 versus polygon."
+  ],
+
+  "50": [
+    "What is the EWKT geometry of Broad St subway station?",
+    "Return Broad St station geometry expressed as EWKT.",
+    "Provide the geometry (EWKT) for the subway stop Broad St.",
+    "Show Broad St station’s geometry in Extended WKT.",
+    "Give EWKT output for Broad St subway station.",
+    "Display the geometry of Broad St station using ST_AsEWKT.",
+    "Fetch Broad St subway station geometry in EWKT format.",
+    "What extended WKT represents Broad St station?",
+    "List the EWKT string describing Broad St station.",
+    "Provide the ST_AsEWKT result for Broad St subway station."
+  ]
+}
+```
+
+Total re-phrasings supplied: 50 (original items) × 10 variations = 500.
